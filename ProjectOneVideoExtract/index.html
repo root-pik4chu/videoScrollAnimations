@@ -1,0 +1,170 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script src="https://cdn.tailwindcss.com"></script>
+   <link rel="stylesheet" href="style.css">
+   <title>Document</title>
+</head>
+<body>
+
+   
+
+   <div class="w-full bg-zinc-900 font-[f1]">
+      <div class="parent w-full h-[1000vh] relative top-0 left-0 ">
+         <div class="sticky w-full h-screen bg-red-500 top-0 left-0 ">
+            <canvas class="w-full h-screen" id="frame"></canvas>
+         </div>
+
+         <div class=" textParent w-full h-screen absolute top-0 text-[7vw] z-10">
+           <div class="abs relative top-[120%] h-fit">
+            <h1 class="text-zinc-100 relative overflow-hidden">
+               <span class="zuup inline-block translate-y-[100%] ">root Pik@chu</span>
+            </h1>
+           </div>
+         </div>
+         <!-- <div class="">root</div> -->
+      </div>
+      <div class="w-full h-screen bg-gray-800"></div>
+   </div>
+
+
+
+
+   <img src="" alt="">
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script> 
+
+   <script>
+   const lenis = new Lenis({
+      autoRaf: true,
+    });
+   </script>
+
+   <script>
+
+      const canvas = document.querySelector("canvas")
+
+      const context = canvas.getContext("2d")
+
+      const frames = {
+         currentIndex : 0,
+         maxIndex : 600
+      }
+      
+      let imagesLoaded = 0;
+      const imgTags = []
+
+      function preloader() {  
+         for(var i = 1 ; i <= frames.maxIndex ; i++){
+            const imgUrl = `./videoFiles/frame_${i.toString().padStart(4 , "0")}.jpeg`
+            const img = new Image();
+            img.src = imgUrl;
+            // console.log(img);
+
+            img.onload = ()=>{
+
+               imagesLoaded++
+               // ./videoFiles/frame_0001.jpeg
+               if(imagesLoaded === frames.maxIndex){
+                  // console.log("all ni");
+                  loadImage(frames.currentIndex)
+                  startAnimation();
+               } 
+            }
+            imgTags.push(img)
+            
+         }
+      }
+
+      function loadImage(index){
+         if(index >= 0 && index <= frames.maxIndex){
+            const img = imgTags[index]
+            // console.log(canvas);
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+
+            const scaleX = canvas.width / img.width;
+            const scaleY = canvas.height / img.height;
+
+            const scale = Math.max(scaleX , scaleY);
+
+            const newWidth = img.width * scale;
+            const newHeight =img.height * scale;
+
+            // centeraisation
+            const offsetX = (canvas.width - newWidth) /2;
+            const offsetY = (canvas.height - newHeight) /2;
+
+            context.clearRect( 0 , 0 , canvas.width , canvas.height);
+            // image smooth 
+            context.imageSmoothingEnabled = true;
+            context.imageSmoothingQuality ="high"
+            context.drawImage(img , offsetX , offsetY , newWidth , newHeight);
+            frames.currentIndex = index;
+         }
+
+      }
+
+      function startAnimation(){
+
+         var tl = gsap.timeline({
+            scrollTrigger:{
+               trigger:".parent",
+               start: "top , top",
+               scrub: 2,
+               // markers : true,
+            }
+         });
+
+         tl.to(frames,{
+            currentIndex : frames.maxIndex,
+            onUpdate : function(){
+               loadImage(Math.floor(frames.currentIndex))
+            }
+         })
+
+      }
+
+      function animateText(){
+         const target = document.querySelector('.abs h1 span');
+         var text = gsap.timeline({
+               scrollTrigger:{
+                  trigger:".textParent",
+                  start:"50% 20%",
+                  end: "50% 20%",
+                  // markers:true,
+                  scrub:1,
+               }
+            });
+         text.to(target,{
+               y: "0%",
+               x:10,
+               duration: .5,
+               ease:"cubic-bezier(0.7, 0, 0.84, 0)",
+            })
+// 
+      }
+
+   preloader()
+   animateText()
+   </script>
+</body>
+</html>
+
+
+
+

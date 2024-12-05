@@ -1,0 +1,26 @@
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+/* color: rgb(0, 0, 0); */
+/* font-family: PT Sans; */
+}
+
+body{
+height: 100%;
+width: 100%;
+}
+
+@font-face {
+   font-family: f1;
+   src: url("./Dirtyline\ 36daysoftype\ 2022.otf");
+}
+
+.abs h1 span{
+   display: inline-block;
+  
+   /* top: 100%;  */
+   /* color: rgb(178, 36, 255); */
+   transform: translateY(100%);
+   
+}
